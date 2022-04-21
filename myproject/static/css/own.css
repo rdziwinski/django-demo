@@ -1,0 +1,26 @@
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: #55F;
+}
+
+.nav-link {
+    color: #55F;
+}
+.nav-link:hover, .nav-link:focus {
+    color: #55F;
+}
+
+.logo {
+    margin: 0px 5px 0px 10px;
+}
+
+.display-4 {
+    font-size: 3.2em;
+    padding: 0.3em 0;
+}
+
+
+.notice-main-page img {
+    float: left;
+    margin-right: 1em;
+    max-width: 20%;
+}
