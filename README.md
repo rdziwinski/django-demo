@@ -1,1 +1,1 @@
-# django-demo
+# nboard app
