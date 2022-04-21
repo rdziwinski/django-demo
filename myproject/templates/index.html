@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    {% for notice in notices %}
+    <h1 class="display-4 text-center">{{ notice.title }}</h1>
+    <div class="row">
+        <div class="alert alert-primary" role="alert">Created: <b>{{ notice.created_on}}</b></div>
+
+        <p class="notice-main-page">
+            {% if notice.image %}
+                <img src="{{ notice.image.url}}" alt="connect">
+            {% endif %}
+            {{notice.content|slice:":200" }}
+        </p>
+        <a href="{% url 'notice_detail' notice.slug  %}"><button type="button" class="btn btn-outline-primary">Read More &rarr;</button></a>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{%endblock%}

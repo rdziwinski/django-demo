@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    <h1 class="display-3">{{ notice.title }}</h1>
+    {% if notice.image %}
+       <img src="{{ notice.image.url}}" alt="connect">
+    {% endif %}
+    <p class="text-muted">{{ notice.created_on }}</p>
+    <p class="card-text">{{ object.content | safe }}</p>
+  </div>
+</div>
+
+{% endblock content %}
