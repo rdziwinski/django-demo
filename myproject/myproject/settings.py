@@ -14,7 +14,10 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -78,8 +81,8 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'demo-app',
-        'USER': 'user',
+        'NAME': 'nboard',
+        'USER': 'django',
         'PASSWORD': 'uruyie1kaMae',
         'HOST': '127.0.0.1',
         'PORT': '5432',
