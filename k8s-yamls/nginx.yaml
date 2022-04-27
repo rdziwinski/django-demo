@@ -1,0 +1,121 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: web-cloud-media
+  namespace: web-cloud
+spec:
+  storageClassName: cephfs-korbank-hdd
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    service: nginx
+  name: nginx-conf
+data:
+  default.conf: |
+        upstream django_server {
+            server nboard-svc:5000 fail_timeout=0;
+        }
+
+        # map is needed, when behind another proxy
+        map $http_x_forwarded_proto $thescheme {
+             default $scheme;
+             https https;
+        }
+
+        server {
+            listen 80;
+            server_name nboard.k.pl; # template substitution
+            access_log /dev/stdout;
+            error_log  /dev/stderr warn;
+
+            client_max_body_size 10M;
+
+            location /media/ {
+                alias /srv/nboard/media/;
+            }
+            location / {
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $thescheme;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+                proxy_pass http://django_server;
+            }
+        }
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-cloud-nginx
+  namespace: web-cloud
+  labels:
+    app: web-cloud-nginx
+    developer: wwojciechowski
+    maintainer: rdziwinski
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-cloud-nginx
+  template:
+    metadata:
+      labels:
+        app: web-cloud-nginx
+    spec:
+      containers:
+      - name: web-cloud-nginx
+        image: nginx:alpine
+        envFrom:
+          - configMapRef:
+              name: django-envs
+          - configMapRef:
+              name: postgres-envs
+        resources:
+          requests:
+            cpu: 400m
+            memory: 200Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: nginx-conf
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: default.conf
+          - name: media
+            mountPath: /srv/web_cloud/media/
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: media
+          persistentVolumeClaim:
+            claimName: web-cloud-media
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-cloud-nginx-svc
+  namespace: web-cloud
+spec:
+  selector:
+    app: web-cloud-nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80

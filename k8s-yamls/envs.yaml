@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    service: django
+  name: django-envs
+data:
+  DJANGO_ADMIN_URL: admin_admin/
+  DJANGO_ALLOWED_HOSTS: "*"
+  DJANGO_DEBUG: "true"
+  DJANGO_SECRET_KEY: B4FHHeX227qN7svGihV5IfhIfXnDHtS1zoyD4VobvR1RDPGVgZufJfj0Kn5qmxPd
+  DJANGO_SETTINGS_MODULE: config.settings.production
+  OPENNEBULA_URL: http://dzban_admin:dzban.8@10.44.3.3:2633/RPC2
+  OPENNEBULA_USER_POSTFIX: ""
+  REDIS_URL: redis://web-cloud-redis.web-cloud.svc.k8s.infra.k.pl:6379/0
+  REGISTRATION_DISABLED: "False"
+  SENTRY_DSN: http://10528982984a40f8b7516ddb6f508243@sentry.iptv.k.pl/12
+  SENTRY_ENVIRONMENT: local-prod
+  WSGI_NAME: prod_web_cloud
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    service: postgres
+  name: postgres-envs
+data:
+  POSTGRES_DB: web_cloud
+  POSTGRES_HOST: web-cloud-postgres-svc.web-cloud.svc.k8s.infra.k.pl
+  POSTGRES_PASSWORD: Nw1I92qykH3FZ3B4NjVUHiobyI5DMfVkkyIaI94brEudFKXo3IcW59o3G5OlMuq2
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: web_cloud_database_user

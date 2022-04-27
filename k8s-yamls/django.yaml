@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nboard-django
+  labels:
+    app: nBoard
+    developer: rdziwinski
+    maintainer: rdziwinski
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nboard-django
+  template:
+    metadata:
+      labels:
+        app: nboard-django
+    spec:s
+      containers:
+      - name: nboard
+        image: nboard:latest
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: django-envs
+        - configMapRef:
+            name: postgres-envs
+        resources:
+          requests:
+            cpu: 200m
+            memory: 400Mi
+          limits:
+            cpu: 800m
+            memory: 1Gi
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - name: media
+            mountPath: /srv/web_cloud/media/
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: web-cloud-media
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nboard-django-svc
+spec:
+  selector:
+    app: nboard-django
+  ports:
+    - name: django
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

@@ -1,0 +1,10 @@
+{
+    "auths": {
+        "https://registry.k.pl":{
+            "username":"k8s-cloud",
+            "password":"b5dpG11zXVK_zL8WY6Pa",
+            "email":"research@korbank.pl",
+            "auth":"azhzLWNsb3VkOmI1ZHBHMTF6WFZLX3pMOFdZNlBh"
+    	}
+    }
+}
